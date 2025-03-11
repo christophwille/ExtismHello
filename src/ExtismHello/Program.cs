@@ -1,13 +1,13 @@
-﻿using Extism.Sdk;
-using Extism.Sdk.Native;
+﻿// https://github.com/extism/dotnet-sdk
+
+using Extism.Sdk;
 using System.Text;
 
-var context = new Context();
-var wasm = await File.ReadAllBytesAsync("code.wasm");
-using var plugin = context.CreatePlugin(wasm, new HostFunction[0], withWasi: true);
+var manifest = new Manifest(new PathWasmSource("code.wasm"));
+using var plugin = new Plugin(manifest, new HostFunction[] { }, withWasi: true);
 
 var output = Encoding.UTF8.GetString(
-    plugin.CallFunction("count_vowels", Encoding.UTF8.GetBytes("Hello World!"))
+    plugin.Call("count_vowels", Encoding.UTF8.GetBytes("Hello World!"))
 );
 
 Console.WriteLine(output);
